@@ -11,12 +11,22 @@ import com.example.solarsystem.R
 
 class PlanetAdapter(val planets: List<Planet>): Adapter<PlanetAdapter.PlanetViewHolder>() {
 
+    private var planetItemListener: PlanetItemListener? = null
 
-    class PlanetViewHolder(view: View): ViewHolder(view) {
+    fun setPlanetItemListener(listener: PlanetItemListener) {
+        this.planetItemListener = listener
+    }
+
+    class PlanetViewHolder(view: View, planetListener: PlanetItemListener?): ViewHolder(view) {
 
         val name: TextView = view.findViewById (R.id.card_tv_planet_name)
         val image: ImageView = view.findViewById(R.id.card_image)
 
+        init {
+            view.setOnClickListener {
+                planetListener?.onPlanetClick(view, adapterPosition)
+            }
+        }
 
     }
 
@@ -24,7 +34,7 @@ class PlanetAdapter(val planets: List<Planet>): Adapter<PlanetAdapter.PlanetView
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_planet, parent, false)
 
-        return PlanetViewHolder(view)
+        return PlanetViewHolder(view, planetItemListener)
     }
 
     override fun onBindViewHolder(holder: PlanetViewHolder, position: Int) {
